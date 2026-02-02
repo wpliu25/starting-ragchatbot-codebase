@@ -5,7 +5,7 @@
     padding: 0;
 }
 
-/* CSS Variables */
+/* CSS Variables - Dark Theme (default) */
 :root {
     --primary-color: #2563eb;
     --primary-hover: #1d4ed8;
@@ -16,12 +16,66 @@
     --text-secondary: #94a3b8;
     --border-color: #334155;
     --user-message: #2563eb;
+    --user-message-text: #ffffff;
     --assistant-message: #374151;
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
     --radius: 12px;
     --focus-ring: rgba(37, 99, 235, 0.2);
     --welcome-bg: #1e3a5f;
     --welcome-border: #2563eb;
+    --code-bg: rgba(0, 0, 0, 0.2);
+    --error-bg: rgba(239, 68, 68, 0.1);
+    --error-text: #f87171;
+    --error-border: rgba(239, 68, 68, 0.2);
+    --success-bg: rgba(34, 197, 94, 0.1);
+    --success-text: #4ade80;
+    --success-border: rgba(34, 197, 94, 0.2);
+    --source-link-bg: rgba(139, 92, 246, 0.15);
+    --source-link-border: rgba(139, 92, 246, 0.4);
+    --source-link-text: #a78bfa;
+    --source-link-hover-bg: rgba(139, 92, 246, 0.25);
+    --source-link-hover-border: rgba(139, 92, 246, 0.6);
+    --source-link-hover-text: #c4b5fd;
+}
+
+/* Light Theme */
+[data-theme="light"] {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --background: #f8fafc;
+    --surface: #ffffff;
+    --surface-hover: #f1f5f9;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --border-color: #e2e8f0;
+    --user-message: #2563eb;
+    --user-message-text: #ffffff;
+    --assistant-message: #f1f5f9;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --focus-ring: rgba(37, 99, 235, 0.3);
+    --welcome-bg: #eff6ff;
+    --welcome-border: #2563eb;
+    --code-bg: rgba(0, 0, 0, 0.05);
+    --error-bg: rgba(239, 68, 68, 0.1);
+    --error-text: #dc2626;
+    --error-border: rgba(239, 68, 68, 0.3);
+    --success-bg: rgba(34, 197, 94, 0.1);
+    --success-text: #16a34a;
+    --success-border: rgba(34, 197, 94, 0.3);
+    --source-link-bg: rgba(139, 92, 246, 0.1);
+    --source-link-border: rgba(139, 92, 246, 0.3);
+    --source-link-text: #7c3aed;
+    --source-link-hover-bg: rgba(139, 92, 246, 0.2);
+    --source-link-hover-border: rgba(139, 92, 246, 0.5);
+    --source-link-hover-text: #6d28d9;
+}
+
+/* Theme Transition */
+body,
+body *,
+body *::before,
+body *::after {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Base Styles */
@@ -65,6 +119,62 @@ header h1 {
     font-size: 0.95rem;
     color: var(--text-secondary);
     margin-top: 0.5rem;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 1000;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--surface);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.theme-toggle:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.theme-toggle:active {
+    transform: scale(0.95);
+}
+
+.theme-toggle svg {
+    width: 22px;
+    height: 22px;
+    color: var(--text-primary);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.theme-toggle .icon-sun {
+    display: none;
+}
+
+.theme-toggle .icon-moon {
+    display: block;
+}
+
+[data-theme="light"] .theme-toggle .icon-sun {
+    display: block;
+}
+
+[data-theme="light"] .theme-toggle .icon-moon {
+    display: none;
 }
 
 /* Main Content Area with Sidebar */
@@ -226,7 +336,7 @@ header h1 {
 
 .message.user .message-content {
     background: var(--user-message);
-    color: white;
+    color: var(--user-message-text);
     border-bottom-right-radius: 4px;
 }
 
@@ -282,19 +392,19 @@ header h1 {
 .sources-content a.source-link:link {
     display: inline-block;
     padding: 0.35rem 0.75rem;
-    background: rgba(139, 92, 246, 0.15);
-    border: 1px solid rgba(139, 92, 246, 0.4);
+    background: var(--source-link-bg);
+    border: 1px solid var(--source-link-border);
     border-radius: 1rem;
-    color: #a78bfa;
+    color: var(--source-link-text);
     text-decoration: none;
     font-size: 0.75rem;
     transition: all 0.2s ease;
 }
 
 .sources-content a.source-link:hover {
-    background: rgba(139, 92, 246, 0.25);
-    border-color: rgba(139, 92, 246, 0.6);
-    color: #c4b5fd;
+    background: var(--source-link-hover-bg);
+    border-color: var(--source-link-hover-border);
+    color: var(--source-link-hover-text);
 }
 
 .source-text {
@@ -339,7 +449,7 @@ header h1 {
 }
 
 .message-content code {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: var(--code-bg);
     padding: 0.125rem 0.25rem;
     border-radius: 3px;
     font-family: 'Fira Code', 'Consolas', monospace;
@@ -347,7 +457,7 @@ header h1 {
 }
 
 .message-content pre {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: var(--code-bg);
     padding: 0.75rem;
     border-radius: 4px;
     overflow-x: auto;
@@ -489,21 +599,21 @@ header h1 {
 
 /* Error Message */
 .error-message {
-    background: rgba(239, 68, 68, 0.1);
-    color: #f87171;
+    background: var(--error-bg);
+    color: var(--error-text);
     padding: 0.75rem 1.25rem;
     border-radius: 8px;
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    border: 1px solid var(--error-border);
     margin: 0.5rem 0;
 }
 
 /* Success Message */
 .success-message {
-    background: rgba(34, 197, 94, 0.1);
-    color: #4ade80;
+    background: var(--success-bg);
+    color: var(--success-text);
     padding: 0.75rem 1.25rem;
     border-radius: 8px;
-    border: 1px solid rgba(34, 197, 94, 0.2);
+    border: 1px solid var(--success-border);
     margin: 0.5rem 0;
 }
 
@@ -698,6 +808,18 @@ details[open] .suggested-header::before {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .theme-toggle {
+        width: 40px;
+        height: 40px;
+        top: 0.75rem;
+        right: 0.75rem;
+    }
+
+    .theme-toggle svg {
+        width: 20px;
+        height: 20px;
+    }
+
     .main-content {
         flex-direction: column;
     }
