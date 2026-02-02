@@ -5,6 +5,7 @@ from unittest.mock import Mock, MagicMock
 
 import sys
 import os
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from search_tools import CourseSearchTool, ToolManager
@@ -22,9 +23,7 @@ class TestCourseSearchTool:
 
         assert "No relevant content found" in result
         mock_vector_store_empty.search.assert_called_once_with(
-            query="machine learning",
-            course_name=None,
-            lesson_number=None
+            query="machine learning", course_name=None, lesson_number=None
         )
 
     def test_execute_with_valid_results(self, mock_vector_store):
@@ -40,7 +39,9 @@ class TestCourseSearchTool:
 
     def test_execute_with_error(self, mock_vector_store):
         """Test execute() handles errors properly."""
-        mock_vector_store.search.return_value = SearchResults.empty("Database connection failed")
+        mock_vector_store.search.return_value = SearchResults.empty(
+            "Database connection failed"
+        )
         tool = CourseSearchTool(mock_vector_store)
 
         result = tool.execute(query="test query")
@@ -54,9 +55,7 @@ class TestCourseSearchTool:
         tool.execute(query="test", course_name="ML Course")
 
         mock_vector_store.search.assert_called_with(
-            query="test",
-            course_name="ML Course",
-            lesson_number=None
+            query="test", course_name="ML Course", lesson_number=None
         )
 
     def test_execute_with_lesson_filter(self, mock_vector_store):
@@ -66,9 +65,7 @@ class TestCourseSearchTool:
         tool.execute(query="test", lesson_number=3)
 
         mock_vector_store.search.assert_called_with(
-            query="test",
-            course_name=None,
-            lesson_number=3
+            query="test", course_name=None, lesson_number=3
         )
 
     def test_execute_with_both_filters(self, mock_vector_store):
@@ -78,9 +75,7 @@ class TestCourseSearchTool:
         tool.execute(query="test", course_name="ML Course", lesson_number=2)
 
         mock_vector_store.search.assert_called_with(
-            query="test",
-            course_name="ML Course",
-            lesson_number=2
+            query="test", course_name="ML Course", lesson_number=2
         )
 
     def test_tool_definition_schema(self, mock_vector_store):
@@ -196,4 +191,6 @@ class TestBugDetection:
 
     def test_working_config_returns_results(self, working_config):
         """Verify working config has proper MAX_RESULTS value."""
-        assert working_config.MAX_RESULTS == 5, "Working config should have MAX_RESULTS=5"
+        assert (
+            working_config.MAX_RESULTS == 5
+        ), "Working config should have MAX_RESULTS=5"

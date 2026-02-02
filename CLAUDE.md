@@ -13,6 +13,11 @@ uv sync
 
 # Or manually (from project root)
 cd backend && uv run uvicorn app:app --reload --port 8000
+
+# Code quality commands
+./scripts/format.sh        # Format all Python files with black
+./scripts/check-format.sh  # Check formatting without modifying files
+./scripts/quality.sh       # Run all quality checks (format + tests)
 ```
 
 - Web interface: http://localhost:8000

@@ -5,6 +5,7 @@ from unittest.mock import Mock, MagicMock, patch
 
 import sys
 import os
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from rag_system import RAGSystem
@@ -14,11 +15,13 @@ from config import Config
 class TestRAGSystemQuery:
     """Tests for RAGSystem.query() functionality."""
 
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.SessionManager')
-    def test_query_returns_tuple(self, mock_session, mock_doc_proc, mock_ai_gen, mock_vs, working_config):
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.SessionManager")
+    def test_query_returns_tuple(
+        self, mock_session, mock_doc_proc, mock_ai_gen, mock_vs, working_config
+    ):
         """Test that query() returns (response, sources) tuple."""
         # Setup mocks
         mock_ai_instance = Mock()
@@ -43,11 +46,13 @@ class TestRAGSystemQuery:
         assert isinstance(response, str)
         assert isinstance(sources, list)
 
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.SessionManager')
-    def test_query_with_session(self, mock_session, mock_doc_proc, mock_ai_gen, mock_vs, working_config):
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.SessionManager")
+    def test_query_with_session(
+        self, mock_session, mock_doc_proc, mock_ai_gen, mock_vs, working_config
+    ):
         """Test query with session ID for conversation context."""
         mock_ai_instance = Mock()
         mock_ai_instance.generate_response = Mock(return_value="Response with context")
@@ -57,7 +62,9 @@ class TestRAGSystemQuery:
         mock_vs.return_value = mock_vs_instance
 
         mock_session_instance = Mock()
-        mock_session_instance.get_conversation_history = Mock(return_value="Previous conversation")
+        mock_session_instance.get_conversation_history = Mock(
+            return_value="Previous conversation"
+        )
         mock_session.return_value = mock_session_instance
 
         system = RAGSystem(working_config)
@@ -70,11 +77,13 @@ class TestRAGSystemQuery:
 class TestRAGSystemSourceManagement:
     """Tests for source retrieval and reset functionality."""
 
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.SessionManager')
-    def test_sources_retrieved_after_query(self, mock_session, mock_doc_proc, mock_ai_gen, mock_vs, working_config):
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.SessionManager")
+    def test_sources_retrieved_after_query(
+        self, mock_session, mock_doc_proc, mock_ai_gen, mock_vs, working_config
+    ):
         """Test that sources are retrieved from tool manager after query."""
         mock_ai_instance = Mock()
         mock_ai_instance.generate_response = Mock(return_value="Response")
@@ -92,18 +101,22 @@ class TestRAGSystemSourceManagement:
         system = RAGSystem(working_config)
 
         # Simulate tool having sources
-        system.search_tool.last_sources = [{"text": "Test Course - Lesson 1", "link": "http://example.com"}]
+        system.search_tool.last_sources = [
+            {"text": "Test Course - Lesson 1", "link": "http://example.com"}
+        ]
 
         response, sources = system.query("Test query")
 
         assert len(sources) == 1
         assert sources[0]["text"] == "Test Course - Lesson 1"
 
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.SessionManager')
-    def test_sources_reset_after_query(self, mock_session, mock_doc_proc, mock_ai_gen, mock_vs, working_config):
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.SessionManager")
+    def test_sources_reset_after_query(
+        self, mock_session, mock_doc_proc, mock_ai_gen, mock_vs, working_config
+    ):
         """Test that sources are reset after retrieval."""
         mock_ai_instance = Mock()
         mock_ai_instance.generate_response = Mock(return_value="Response")
@@ -134,11 +147,13 @@ class TestRAGSystemBugPropagation:
         """Verify broken config has MAX_RESULTS=0."""
         assert broken_config.MAX_RESULTS == 0
 
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.SessionManager')
-    def test_vector_store_receives_max_results(self, mock_session, mock_doc_proc, mock_ai_gen, mock_vs, broken_config):
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.SessionManager")
+    def test_vector_store_receives_max_results(
+        self, mock_session, mock_doc_proc, mock_ai_gen, mock_vs, broken_config
+    ):
         """Test that VectorStore is initialized with config's MAX_RESULTS."""
         mock_vs_instance = Mock()
         mock_vs.return_value = mock_vs_instance
@@ -151,13 +166,17 @@ class TestRAGSystemBugPropagation:
         mock_vs.assert_called_once()
         call_args = mock_vs.call_args
         # Third argument is max_results
-        assert call_args[0][2] == 0, "VectorStore should receive MAX_RESULTS=0 from broken config"
+        assert (
+            call_args[0][2] == 0
+        ), "VectorStore should receive MAX_RESULTS=0 from broken config"
 
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.SessionManager')
-    def test_working_config_passes_correct_max_results(self, mock_session, mock_doc_proc, mock_ai_gen, mock_vs, working_config):
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.SessionManager")
+    def test_working_config_passes_correct_max_results(
+        self, mock_session, mock_doc_proc, mock_ai_gen, mock_vs, working_config
+    ):
         """Test that working config passes correct MAX_RESULTS to VectorStore."""
         mock_vs_instance = Mock()
         mock_vs.return_value = mock_vs_instance
@@ -169,17 +188,21 @@ class TestRAGSystemBugPropagation:
         mock_vs.assert_called_once()
         call_args = mock_vs.call_args
         # Third argument is max_results
-        assert call_args[0][2] == 5, "VectorStore should receive MAX_RESULTS=5 from working config"
+        assert (
+            call_args[0][2] == 5
+        ), "VectorStore should receive MAX_RESULTS=5 from working config"
 
 
 class TestRAGSystemToolIntegration:
     """Tests for tool manager integration."""
 
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.SessionManager')
-    def test_tools_registered_on_init(self, mock_session, mock_doc_proc, mock_ai_gen, mock_vs, working_config):
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.SessionManager")
+    def test_tools_registered_on_init(
+        self, mock_session, mock_doc_proc, mock_ai_gen, mock_vs, working_config
+    ):
         """Test that search tools are registered during initialization."""
         mock_vs.return_value = Mock()
         mock_ai_gen.return_value = Mock()
@@ -190,11 +213,13 @@ class TestRAGSystemToolIntegration:
         assert "search_course_content" in system.tool_manager.tools
         assert "get_course_outline" in system.tool_manager.tools
 
-    @patch('rag_system.VectorStore')
-    @patch('rag_system.AIGenerator')
-    @patch('rag_system.DocumentProcessor')
-    @patch('rag_system.SessionManager')
-    def test_tools_passed_to_ai_generator(self, mock_session, mock_doc_proc, mock_ai_gen, mock_vs, working_config):
+    @patch("rag_system.VectorStore")
+    @patch("rag_system.AIGenerator")
+    @patch("rag_system.DocumentProcessor")
+    @patch("rag_system.SessionManager")
+    def test_tools_passed_to_ai_generator(
+        self, mock_session, mock_doc_proc, mock_ai_gen, mock_vs, working_config
+    ):
         """Test that tool definitions are passed to AI generator."""
         mock_ai_instance = Mock()
         mock_ai_instance.generate_response = Mock(return_value="Response")
@@ -224,12 +249,14 @@ class TestConfigBugVerification:
         """Test that the default Config has MAX_RESULTS=5 (bug fixed)."""
         from config import config
 
-        assert config.MAX_RESULTS == 5, \
-            f"Expected MAX_RESULTS=5, got {config.MAX_RESULTS}. The bug may have regressed!"
+        assert (
+            config.MAX_RESULTS == 5
+        ), f"Expected MAX_RESULTS=5, got {config.MAX_RESULTS}. The bug may have regressed!"
 
     def test_config_class_default_is_five(self):
         """Test that Config class defaults MAX_RESULTS to 5."""
         fresh_config = Config()
 
-        assert fresh_config.MAX_RESULTS == 5, \
-            f"Expected MAX_RESULTS=5, got {fresh_config.MAX_RESULTS}. The bug may have regressed!"
+        assert (
+            fresh_config.MAX_RESULTS == 5
+        ), f"Expected MAX_RESULTS=5, got {fresh_config.MAX_RESULTS}. The bug may have regressed!"
